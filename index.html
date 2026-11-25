@@ -1,517 +1,353 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StudyFlow — Student Study Management System</title>
+  <title>StudyFlow OS — Complete Student Study & AI Mentor Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary: #4f46e5;
-      --primary-hover: #4338ca;
-      --bg: #f1f5f9;
+    :root[data-theme="dark"] {
+      --bg: #09090b;
+      --bg-subtle: #111114;
+      --card: #141418;
+      --card-hover: #1a1a20;
+      --input-bg: #1c1c22;
+      --border: #27272f;
+      --border-strong: #3f3f4a;
+      --text: #f4f4f5;
+      --muted: #a1a1aa;
+      --accent: #818cf8;
+      --accent-solid: #6366f1;
+      --accent-hover: #4f46e5;
+      --accent-soft: rgba(99, 102, 241, 0.14);
+      --success: #34d399;
+      --success-soft: rgba(52, 211, 153, 0.14);
+      --warning: #fbbf24;
+      --warning-soft: rgba(251, 191, 36, 0.14);
+      --danger: #f87171;
+      --danger-soft: rgba(248, 113, 113, 0.14);
+      --nav-bg: rgba(9, 9, 11, 0.85);
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+    }
+
+    :root[data-theme="light"] {
+      --bg: #fafafa;
+      --bg-subtle: #f4f4f5;
       --card: #ffffff;
-      --text: #0f172a;
-      --muted: #64748b;
-      --border: #e2e8f0;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
+      --card-hover: #f8fafc;
+      --input-bg: #f4f4f5;
+      --border: #e4e4e7;
+      --border-strong: #d4d4d8;
+      --text: #18181b;
+      --muted: #71717a;
+      --accent: #4f46e5;
+      --accent-solid: #4f46e5;
+      --accent-hover: #4338ca;
+      --accent-soft: rgba(79, 70, 229, 0.09);
+      --success: #059669;
+      --success-soft: rgba(16, 185, 129, 0.12);
+      --warning: #d97706;
+      --warning-soft: rgba(245, 158, 11, 0.12);
+      --danger: #dc2626;
+      --danger-soft: rgba(239, 68, 68, 0.12);
+      --nav-bg: rgba(255, 255, 255, 0.85);
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; }
+    body { background: var(--bg); color: var(--text); line-height: 1.55; transition: background 0.2s, color 0.2s; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .hidden { display: none !important; }
 
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    /* ================= AUTH / LOGIN SCREEN ================= */
+    /* ================= AUTH SCREEN (FR1, FR2, FR3, NFR1) ================= */
     .auth-wrapper {
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 24px;
-      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+      background-image: radial-gradient(circle at 50% 0%, var(--accent-soft), transparent 65%);
+      position: relative;
     }
-
+    .auth-theme-toggle { position: absolute; top: 20px; right: 24px; }
     .auth-card {
       background: var(--card);
       width: 100%;
-      max-width: 460px;
-      padding: 32px;
-      border-radius: 18px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+      max-width: 500px;
+      padding: 34px 30px;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
     }
-
-    .auth-brand {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-
-    .auth-brand h1 {
-      font-size: 1.75rem;
-      color: #1e1b4b;
-    }
-
-    .auth-brand p {
-      font-size: 0.9rem;
-      color: var(--muted);
-      margin-top: 4px;
-    }
+    .auth-brand { text-align: center; margin-bottom: 20px; }
+    .brand-logo { display: inline-flex; align-items: center; gap: 8px; font-size: 1.45rem; font-weight: 800; letter-spacing: -0.03em; }
+    .brand-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-solid); box-shadow: 0 0 12px var(--accent-solid); }
+    .auth-brand p { font-size: 0.86rem; color: var(--muted); margin-top: 4px; }
 
     .auth-tabs {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      background: #f1f5f9;
+      background: var(--input-bg);
       padding: 4px;
-      border-radius: 10px;
-      margin-bottom: 20px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      border: 1px solid var(--border);
     }
+    .auth-tab { padding: 9px; border: none; background: transparent; font-weight: 600; font-size: 0.86rem; color: var(--muted); border-radius: 9px; cursor: pointer; }
+    .auth-tab.active { background: var(--card); color: var(--text); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
 
-    .auth-tab {
-      padding: 10px;
-      border: none;
-      background: transparent;
-      font-weight: 600;
-      color: var(--muted);
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .auth-tab.active {
-      background: white;
-      color: var(--primary);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    }
-
-    .form-field {
-      margin-bottom: 14px;
-    }
-
-    .form-field label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 5px;
-      color: #334155;
-    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-field { margin-bottom: 12px; }
+    .form-field label { display: block; font-size: 0.78rem; font-weight: 600; margin-bottom: 5px; color: var(--muted); }
 
     .auth-error {
-      background: #fee2e2;
-      color: #b91c1c;
-      padding: 10px 12px;
-      border-radius: 8px;
-      font-size: 0.85rem;
+      background: var(--danger-soft);
+      color: var(--danger);
+      border: 1px solid var(--danger);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.83rem;
       margin-bottom: 14px;
       display: none;
     }
 
-    /* ================= MAIN APP NAVBAR ================= */
+    /* ================= NAVBAR & NOTIFICATIONS (FR8) ================= */
     .navbar {
-      background: linear-gradient(135deg, #1e1b4b, #312e81);
-      color: white;
-      padding: 18px 32px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--nav-bg);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 16px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .navbar h1 {
-      font-size: 1.45rem;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .student-badge {
-      margin-top: 4px;
-      font-size: 0.86rem;
-      color: #e0e7ff;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .student-pill {
-      background: rgba(255, 255, 255, 0.15);
-      padding: 2px 10px;
-      border-radius: 99px;
-      font-size: 0.8rem;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    /* Pomodoro Timer Widget */
-    .timer-box {
-      background: rgba(255, 255, 255, 0.12);
-      padding: 8px 16px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
       gap: 12px;
     }
+    .student-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 4px; font-size: 0.8rem; color: var(--muted); }
+    .pill { background: var(--input-bg); border: 1px solid var(--border); color: var(--text); padding: 2px 9px; border-radius: 99px; font-size: 0.74rem; font-weight: 600; }
+    .nav-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
-    .timer-display {
-      font-size: 1.35rem;
-      font-weight: 700;
-      font-variant-numeric: tabular-nums;
-    }
+    .timer-box { background: var(--input-bg); border: 1px solid var(--border); padding: 5px 11px; border-radius: 10px; display: flex; align-items: center; gap: 8px; }
+    .timer-display { font-family: 'JetBrains Mono', monospace; font-size: 0.98rem; font-weight: 700; color: var(--accent); }
 
-    .timer-btn {
-      background: #10b981;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 0.82rem;
-    }
-
-    .timer-btn.reset {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .logout-btn {
-      background: #ef4444;
-      color: white;
-      border: none;
-      padding: 9px 14px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-
-    .logout-btn:hover {
-      background: #dc2626;
-    }
-
-    /* ================= DASHBOARD & CARDS ================= */
-    .container {
-      max-width: 1150px;
-      margin: 28px auto;
-      padding: 0 20px;
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .stat-card {
-      background: var(--card);
-      padding: 20px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
-    }
-
-    .stat-card span {
-      font-size: 0.82rem;
-      color: var(--muted);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .stat-card h3 {
-      font-size: 2rem;
-      margin-top: 6px;
+    .icon-btn {
+      background: var(--input-bg);
       color: var(--text);
-    }
-
-    .progress-bar-bg {
-      width: 100%;
-      height: 8px;
-      background: #e2e8f0;
-      border-radius: 99px;
-      margin-top: 10px;
-      overflow: hidden;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--success);
-      transition: width 0.3s ease;
-    }
-
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 2fr;
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-
-    .card {
-      background: var(--card);
-      padding: 22px;
-      border-radius: 14px;
       border: 1px solid var(--border);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
-      margin-bottom: 24px;
-    }
-
-    .card h2 {
-      font-size: 1.1rem;
-      margin-bottom: 16px;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .input-group {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 14px;
-    }
-
-    .task-form-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr auto;
-      gap: 10px;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.92rem;
-      background: #f8fafc;
-      color: var(--text);
-    }
-
-    input:focus, select:focus {
-      outline: none;
-      border-color: var(--primary);
-      background: white;
-    }
-
-    .btn {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 8px;
+      padding: 7px 12px;
+      border-radius: 10px;
       font-weight: 600;
+      font-size: 0.8rem;
       cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.2s;
-    }
-
-    .btn:hover {
-      background: var(--primary-hover);
-    }
-
-    .btn-full {
-      width: 100%;
-      padding: 12px;
-      font-size: 1rem;
-      margin-top: 6px;
-    }
-
-    .subject-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .chip {
-      background: #eef2ff;
-      color: #3730a3;
-      padding: 6px 12px;
-      border-radius: 99px;
-      font-size: 0.85rem;
-      font-weight: 600;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      position: relative;
+    }
+    .icon-btn:hover { border-color: var(--border-strong); background: var(--card-hover); }
+    .api-connected { border-color: var(--success) !important; color: var(--success) !important; background: var(--success-soft) !important; }
+
+    .notif-badge {
+      background: var(--danger);
+      color: white;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 99px;
     }
 
-    .chip button {
-      background: none;
-      border: none;
-      color: #6366f1;
-      font-weight: bold;
-      cursor: pointer;
-      font-size: 1rem;
-      line-height: 1;
+    .notif-dropdown {
+      position: absolute;
+      top: 62px;
+      right: 28px;
+      width: 340px;
+      max-width: 92vw;
+      background: var(--card);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+      z-index: 100;
     }
 
-    /* Tables */
-    .table-header {
+    .timer-btn { background: var(--accent-solid); color: white; border: none; padding: 4px 9px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.75rem; }
+    .timer-btn.reset { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .logout-btn { background: var(--danger-soft); color: var(--danger); border: none; padding: 7px 12px; border-radius: 10px; font-weight: 600; cursor: pointer; font-size: 0.8rem; }
+
+    /* ================= SEGMENTED NAVIGATION ================= */
+    .main-tabs-bar { max-width: 1220px; margin: 20px auto 0; padding: 0 20px; }
+    .main-tabs { display: flex; background: var(--input-bg); padding: 5px; border-radius: 14px; border: 1px solid var(--border); gap: 4px; overflow-x: auto; }
+    .main-tab-btn { padding: 9px 15px; border: none; background: transparent; font-weight: 600; font-size: 0.84rem; color: var(--muted); border-radius: 10px; cursor: pointer; white-space: nowrap; }
+    .main-tab-btn.active { background: var(--card); color: var(--text); box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
+
+    /* ================= CONTAINERS & CARDS ================= */
+    .container { max-width: 1220px; margin: 20px auto 48px; padding: 0 20px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+    .stat-card { background: var(--card); padding: 18px 20px; border-radius: 16px; border: 1px solid var(--border); }
+    .stat-card span { font-size: 0.74rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat-card h3 { font-family: 'JetBrains Mono', monospace; font-size: 1.75rem; margin-top: 6px; }
+
+    .progress-bar-bg { width: 100%; height: 6px; background: var(--input-bg); border-radius: 99px; margin-top: 10px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; width: 0%; background: var(--success); transition: width 0.35s ease; }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1.65fr; gap: 18px; margin-bottom: 20px; }
+    .two-col-equal { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 20px; }
+    .card { background: var(--card); padding: 22px; border-radius: 18px; border: 1px solid var(--border); margin-bottom: 20px; }
+    .card h2 { font-size: 1.02rem; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 9px 13px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.88rem;
+      background: var(--input-bg);
+      color: var(--text);
+    }
+    textarea { resize: vertical; min-height: 95px; line-height: 1.5; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent-solid); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+    .btn { background: var(--accent-solid); color: white; border: none; padding: 9px 16px; border-radius: 10px; font-weight: 600; font-size: 0.85rem; cursor: pointer; white-space: nowrap; }
+    .btn:hover:not(:disabled) { background: var(--accent-hover); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .btn-success { background: var(--success-soft); color: var(--success); border: 1px solid var(--success); }
+    .btn-full { width: 100%; padding: 11px; font-size: 0.92rem; margin-top: 6px; }
+
+    /* ================= MENTOR, FLASHCARDS & QUIZZES (FR6, FR7) ================= */
+    .mentor-banner {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent-solid);
+      padding: 16px 20px;
+      border-radius: 16px;
+      margin-bottom: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
       gap: 12px;
-      margin-bottom: 16px;
     }
+    .countdown-pill { font-family: 'JetBrains Mono', monospace; background: var(--accent-soft); color: var(--accent); border: 1px solid var(--accent-solid); padding: 6px 12px; border-radius: 10px; font-weight: 700; font-size: 0.82rem; }
 
-    .filters {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+    .mentor-subtabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+    .subtab-btn { padding: 7px 13px; border-radius: 99px; border: 1px solid var(--border); background: var(--input-bg); font-weight: 600; font-size: 0.8rem; cursor: pointer; color: var(--muted); }
+    .subtab-btn.active { background: var(--accent-solid); color: white; border-color: var(--accent-solid); }
 
-    .filters select {
-      width: auto;
-      min-width: 140px;
-    }
+    .stage-card { border: 1px solid var(--border); border-radius: 14px; padding: 15px 17px; margin-bottom: 12px; background: var(--bg-subtle); }
+    .stage-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; gap: 8px; }
+    .stage-badge { font-size: 0.7rem; font-weight: 700; padding: 3px 9px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); text-transform: uppercase; }
+    .roadmap-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+    .roadmap-item:last-child { border-bottom: none; }
+    .roadmap-item input[type="checkbox"] { width: 16px; height: 16px; margin-top: 3px; accent-color: var(--accent-solid); cursor: pointer; }
 
-    .table-wrapper {
-      overflow-x: auto;
-    }
+    .flashcard-container { max-width: 600px; margin: 8px auto; text-align: center; }
+    .scratch-card { background: var(--bg-subtle); border: 1px solid var(--border-strong); border-radius: 18px; min-height: 210px; padding: 28px; display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; user-select: none; }
+    .scratch-card.flipped { background: var(--accent-soft); border-color: var(--accent-solid); }
+    .card-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: var(--accent); margin-bottom: 12px; }
+    .card-content { font-size: 1.08rem; font-weight: 600; white-space: pre-line; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-    }
+    .quiz-option { display: block; width: 100%; text-align: left; padding: 11px 15px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-subtle); color: var(--text); cursor: pointer; font-size: 0.88rem; }
+    .quiz-option:hover:not(:disabled) { border-color: var(--accent-solid); background: var(--accent-soft); }
+    .quiz-option.correct { background: var(--success-soft); border-color: var(--success); color: var(--success); font-weight: 700; }
+    .quiz-option.wrong { background: var(--danger-soft); border-color: var(--danger); color: var(--danger); }
 
-    th {
-      background: #f8fafc;
-      color: var(--muted);
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 12px 16px;
-      border-bottom: 2px solid var(--border);
-    }
+    .chat-box { height: 300px; overflow-y: auto; border: 1px solid var(--border); border-radius: 14px; padding: 14px; background: var(--bg-subtle); margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
+    .msg { max-width: 84%; padding: 11px 15px; border-radius: 14px; font-size: 0.88rem; white-space: pre-line; }
+    .msg-mentor { background: var(--card); border: 1px solid var(--border); align-self: flex-start; }
+    .msg-user { background: var(--accent-solid); color: white; align-self: flex-end; }
 
-    td {
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.94rem;
-    }
+    /* Tables & Chips */
+    .chip { background: var(--accent-soft); color: var(--accent); border: 1px solid rgba(99, 102, 241, 0.25); padding: 4px 11px; border-radius: 99px; font-size: 0.8rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; margin: 3px; }
+    .chip button { background: none; border: none; color: inherit; font-weight: bold; cursor: pointer; }
 
-    tr:hover {
-      background: #f8fafc;
-    }
+    .table-wrapper { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; padding: 11px 12px; border-bottom: 1px solid var(--border); }
+    td { padding: 12px; border-bottom: 1px solid var(--border); font-size: 0.88rem; }
+    tr:hover td { background: var(--card-hover); }
 
-    tr.completed-row td.task-name {
-      text-decoration: line-through;
-      color: var(--muted);
-    }
+    .badge { padding: 3px 9px; border-radius: 6px; font-size: 0.74rem; font-weight: 700; }
+    .badge-High, .badge-Weak { background: var(--danger-soft); color: var(--danger); }
+    .badge-Medium, .badge-Average { background: var(--warning-soft); color: var(--warning); }
+    .badge-Low, .badge-Strong { background: var(--success-soft); color: var(--success); }
 
-    .badge {
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      display: inline-block;
-    }
+    .action-btn { border: none; padding: 5px 10px; border-radius: 7px; cursor: pointer; font-size: 0.76rem; font-weight: 600; margin-right: 4px; }
+    .btn-check { background: var(--success-soft); color: var(--success); }
+    .btn-del { background: var(--danger-soft); color: var(--danger); }
 
-    .badge-High { background: #fee2e2; color: #b91c1c; }
-    .badge-Medium { background: #fef3c7; color: #b45309; }
-    .badge-Low { background: #dcfce7; color: #15803d; }
-
-    .status-pill {
-      padding: 4px 10px;
-      border-radius: 99px;
-      font-size: 0.78rem;
-      font-weight: 600;
-    }
-
-    .status-done { background: #d1fae5; color: #065f46; }
-    .status-pending { background: #ffedd5; color: #9a3412; }
-
-    .action-btn {
-      border: none;
-      padding: 6px 10px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.82rem;
-      font-weight: 600;
-      margin-right: 4px;
-    }
-
-    .btn-check { background: #10b981; color: white; }
-    .btn-del { background: #fee2e2; color: #b91c1c; }
-
-    .schedule-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 2fr auto;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
+    .material-card { border: 1px solid var(--border); background: var(--bg-subtle); border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+    .group-card { border: 1px solid var(--border); background: var(--bg-subtle); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
 
     @media (max-width: 900px) {
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .two-col { grid-template-columns: 1fr; }
-      .task-form-grid, .schedule-grid { grid-template-columns: 1fr; }
+      .stats-grid, .grid-2 { grid-template-columns: 1fr; }
+      .two-col, .two-col-equal { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ==================== 1. STUDENT REGISTER / LOGIN PAGE ==================== -->
+  <!-- ==================== 1. AUTHENTICATION SCREEN (FR1, FR2, FR3, NFR1) ==================== -->
   <section id="auth-screen" class="auth-wrapper">
+    <button type="button" class="icon-btn auth-theme-toggle" id="auth-theme-btn">☀️ Light Mode</button>
+
     <div class="auth-card">
       <div class="auth-brand">
-        <h1>📚 StudyFlow</h1>
-        <p>Student Academic & Study Management Portal</p>
+        <div class="brand-logo"><span class="brand-dot"></span> StudyFlow OS</div>
+        <p>AI Study Planner, Exam Mentor & Collaborative Learning Workspace</p>
       </div>
 
       <div class="auth-tabs">
         <button type="button" class="auth-tab active" id="tab-register">Student Register</button>
-        <button type="button" class="auth-tab" id="tab-login">Student Login</button>
+        <button type="button" class="auth-tab" id="tab-login">Secure Login</button>
       </div>
 
       <div id="auth-error" class="auth-error"></div>
 
-      <!-- Registration Form -->
+      <!-- Register Form -->
       <form id="register-form">
-        <div class="form-field">
-          <label>Student Full Name *</label>
-          <input type="text" id="reg-name" placeholder="Enter your full name" required />
+        <div class="grid-2">
+          <div class="form-field">
+            <label>Full Name *</label>
+            <input type="text" id="reg-name" placeholder="Student Name" required />
+          </div>
+          <div class="form-field">
+            <label>Phone Number *</label>
+            <input type="tel" id="reg-phone" placeholder="e.g., 9876543210" required />
+          </div>
         </div>
         <div class="form-field">
-          <label>University / College Name *</label>
-          <input type="text" id="reg-university" placeholder="e.g., M S Ramaiah University of Applied Sciences" required />
+          <label>Email Address (Login ID) *</label>
+          <input type="email" id="reg-email" placeholder="student@college.edu" required />
         </div>
         <div class="form-field">
-          <label>Course / Program *</label>
-          <input type="text" id="reg-course" placeholder="e.g., B.Tech Computer Science & Engineering" required />
+          <label>College / University Name *</label>
+          <input type="text" id="reg-college" placeholder="e.g., M S Ramaiah University of Applied Sciences" required />
         </div>
-        <div class="form-field">
-          <label>Semester / Year *</label>
-          <input type="text" id="reg-semester" placeholder="e.g., 3rd Semester / 2nd Year" required />
+        <div class="grid-2">
+          <div class="form-field">
+            <label>Course *</label>
+            <input type="text" id="reg-course" placeholder="e.g., B.Tech" required />
+          </div>
+          <div class="form-field">
+            <label>Branch *</label>
+            <input type="text" id="reg-branch" placeholder="e.g., CSE" required />
+          </div>
         </div>
-        <div class="form-field">
-          <label>Student Email or Roll No. (Login ID) *</label>
-          <input type="text" id="reg-id" placeholder="e.g., student@university.edu or 24CS001" required />
-        </div>
-        <div class="form-field">
-          <label>Create Password *</label>
-          <input type="password" id="reg-password" placeholder="Create a password" required />
+        <div class="grid-2">
+          <div class="form-field">
+            <label>Semester *</label>
+            <input type="text" id="reg-semester" placeholder="e.g., 3rd Semester" required />
+          </div>
+          <div class="form-field">
+            <label>Password (SHA-256 Protected) *</label>
+            <input type="password" id="reg-password" placeholder="Min 6 characters" minlength="6" required />
+          </div>
         </div>
         <button type="submit" class="btn btn-full">Create Student Account →</button>
       </form>
@@ -519,500 +355,1410 @@
       <!-- Login Form -->
       <form id="login-form" class="hidden">
         <div class="form-field">
-          <label>Student Email or Roll No. *</label>
-          <input type="text" id="login-id" placeholder="Enter your registered Email or Roll No." required />
+          <label>Registered Email or Phone Number *</label>
+          <input type="text" id="login-identifier" placeholder="Enter email or phone number" required />
         </div>
         <div class="form-field">
           <label>Password *</label>
-          <input type="password" id="login-password" placeholder="Enter your password" required />
+          <input type="password" id="login-password" placeholder="••••••••" required />
         </div>
-        <button type="submit" class="btn btn-full">Login to Dashboard →</button>
+        <button type="submit" class="btn btn-full">Secure Login →</button>
       </form>
     </div>
   </section>
 
-  <!-- ==================== 2. MAIN STUDY DASHBOARD ==================== -->
+  <!-- ==================== 2. MAIN WORKSPACE ==================== -->
   <div id="app-screen" class="hidden">
     <header class="navbar">
       <div>
-        <h1>📚 StudyFlow</h1>
-        <div class="student-badge">
-          <span>👋 Welcome, <strong id="nav-student-name">Student</strong></span>
-          <span class="student-pill" id="nav-university">University</span>
-          <span class="student-pill" id="nav-course">Course</span>
+        <div class="brand-logo" style="font-size: 1.2rem;"><span class="brand-dot"></span> StudyFlow OS</div>
+        <div class="student-meta">
+          <span>👋 <strong id="nav-student-name" style="color: var(--text);">Student</strong></span>
+          <span class="pill" id="nav-college">College</span>
+          <span class="pill" id="nav-academic">Course • Branch • Sem</span>
         </div>
       </div>
 
       <div class="nav-right">
+        <button type="button" class="icon-btn" id="api-key-btn">🔑 Connect Gemini API</button>
+
+        <!-- FR8: Notifications & Reminders Bell -->
+        <button type="button" class="icon-btn" id="notif-toggle-btn">
+          🔔 Reminders <span class="notif-badge" id="notif-count">0</span>
+        </button>
+
         <div class="timer-box">
-          <div>
-            <div style="font-size: 0.7rem; text-transform: uppercase; color: #c7d2fe;">Focus Timer</div>
-            <div class="timer-display" id="timer">25:00</div>
-          </div>
+          <span style="font-size: 0.7rem; font-weight: 700; color: var(--muted);">FOCUS</span>
+          <span class="timer-display" id="timer">25:00</span>
           <button class="timer-btn" id="start-timer">Start</button>
           <button class="timer-btn reset" id="reset-timer">Reset</button>
         </div>
-        <button class="logout-btn" id="logout-btn">Logout</button>
+
+        <button type="button" class="icon-btn" id="theme-toggle-btn">☀️ Light</button>
+        <button class="logout-btn" id="logout-btn">Log out</button>
       </div>
     </header>
 
-    <main class="container">
-      <!-- Dashboard Stats -->
-      <section class="stats-grid">
-        <div class="stat-card">
-          <span>Total Tasks</span>
-          <h3 id="total-tasks">0</h3>
-        </div>
-        <div class="stat-card">
-          <span>Completed</span>
-          <h3 id="completed-tasks" style="color: var(--success);">0</h3>
-        </div>
-        <div class="stat-card">
-          <span>Pending</span>
-          <h3 id="pending-tasks" style="color: var(--warning);">0</h3>
-        </div>
-        <div class="stat-card">
-          <span>Completion Rate</span>
-          <h3 id="progress-percent">0%</h3>
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill" id="progress-fill"></div>
-          </div>
-        </div>
-      </section>
+    <!-- FR8: Notifications Dropdown Panel -->
+    <div id="notif-panel" class="notif-dropdown hidden">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <strong style="font-size:0.9rem;">🔔 Reminders & Alerts</strong>
+        <button type="button" class="btn btn-outline" id="enable-browser-notif" style="padding:4px 8px; font-size:0.72rem;">Enable Browser Alerts</button>
+      </div>
+      <div id="notif-list" style="max-height:240px; overflow-y:auto; font-size:0.82rem;"></div>
+      <form id="custom-reminder-form" style="display:flex; gap:6px; margin-top:10px;">
+        <input type="text" id="reminder-text" placeholder="Add study reminder..." required style="padding:6px 10px; font-size:0.8rem;" />
+        <button type="submit" class="btn" style="padding:6px 10px; font-size:0.78rem;">+</button>
+      </form>
+    </div>
 
-      <!-- Subject & Task Management -->
+    <!-- Primary Module Navigation -->
+    <div class="main-tabs-bar">
+      <nav class="main-tabs">
+        <button class="main-tab-btn active" data-view="view-mentor">🧠 AI Exam Mentor (Scratch → Pro)</button>
+        <button class="main-tab-btn" data-view="view-planner">🗓️ Goals, Subjects & Smart Planner</button>
+        <button class="main-tab-btn" data-view="view-materials">📚 Study Materials & Notes Vault</button>
+        <button class="main-tab-btn" data-view="view-analytics">📊 Analytics & Weak Topics</button>
+        <button class="main-tab-btn" data-view="view-groups">👥 Study Groups (Invite & Share)</button>
+      </nav>
+    </div>
+
+    <!-- ==================== VIEW 1: AI EXAM MENTOR & MOCK TESTS (FR6, FR7) ==================== -->
+    <main id="view-mentor" class="container">
+      <div class="mentor-banner">
+        <div>
+          <strong style="font-size: 0.96rem;">⚡ Persistent Exam Context Vault + Gemini AI</strong>
+          <p style="font-size: 0.83rem; color: var(--muted); margin-top: 2px;">
+            Upload your syllabus & rough notes once. Study across breaks—your roadmap, scratch cards, mock tests, and scores stay saved.
+          </p>
+        </div>
+        <div id="exam-countdown-badge" class="countdown-pill">No Exam Set</div>
+      </div>
+
       <div class="two-col">
         <section class="card" style="margin-bottom: 0;">
-          <h2>📘 Manage Subjects</h2>
-          <div class="input-group">
-            <input type="text" id="subject-input" placeholder="e.g., Data Structures, Java..." />
-            <button class="btn" id="add-subject-btn" type="button">Add</button>
-          </div>
-          <div class="subject-list" id="subject-list"></div>
+          <h2>📥 1. Exam Syllabus & Rough Notes</h2>
+          <form id="mentor-setup-form">
+            <div class="form-field">
+              <label>Exam Subject *</label>
+              <input type="text" id="exam-subject" placeholder="e.g., Data Structures & Algorithms" required />
+            </div>
+            <div class="form-field">
+              <label>Exam Date *</label>
+              <input type="date" id="exam-date" required />
+            </div>
+            <div class="form-field">
+              <label>Syllabus Topics (Comma or line separated) *</label>
+              <textarea id="exam-topics" style="min-height: 70px;" placeholder="e.g., Circular Queue, Doubly Linked List, Binary Search Tree, AVL Tree" required></textarea>
+            </div>
+            <div class="form-field">
+              <label>Rough / Incomplete Notes</label>
+              <textarea id="exam-notes" placeholder="Paste your rough notes, formulas, or half-written concepts here..."></textarea>
+            </div>
+            <div class="form-field">
+              <label>Upload Notes File (.txt / .md)</label>
+              <input type="file" id="notes-file-input" accept=".txt,.md,.csv" />
+            </div>
+            <button type="submit" id="generate-plan-btn" class="btn btn-full">✨ Generate Scratch-to-Pro Plan & Test</button>
+          </form>
         </section>
 
         <section class="card" style="margin-bottom: 0;">
-          <h2>✅ Add Study Task / Assignment</h2>
-          <form id="task-form" class="task-form-grid">
-            <input type="text" id="task-title" placeholder="Task name (e.g., Lab Record, Exam Prep)" required />
-            <select id="task-subject" required></select>
-            <select id="task-priority">
-              <option value="High">High Priority</option>
-              <option value="Medium" selected>Medium Priority</option>
-              <option value="Low">Low Priority</option>
-            </select>
-            <input type="date" id="task-deadline" required />
-            <button type="submit" class="btn">+ Add Task</button>
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 14px;">
+            <h2 style="margin-bottom: 0;">🚀 2. Personal Mentor Workspace</h2>
+            <span id="mentor-readiness" class="mono" style="font-weight: 700; color: var(--success); font-size: 0.84rem;">Readiness: 0%</span>
+          </div>
+
+          <div class="mentor-subtabs">
+            <button class="subtab-btn active" data-sub="sub-roadmap">🗺️ Roadmap</button>
+            <button class="subtab-btn" data-sub="sub-flashcards">🃏 Scratch Cards</button>
+            <button class="subtab-btn" data-sub="sub-quiz">✍️ Scored Quiz / Mock Test</button>
+            <button class="subtab-btn" data-sub="sub-ask">💬 Ask Gemini Mentor</button>
+          </div>
+
+          <!-- Roadmap -->
+          <div id="sub-roadmap">
+            <div id="roadmap-container">
+              <p style="color: var(--muted); text-align: center; padding: 36px 16px; font-size: 0.88rem;">
+                Save your Exam Subject, Topics, and Rough Notes on the left to generate your Scratch-to-Pro roadmap.
+              </p>
+            </div>
+          </div>
+
+          <!-- Scratch Cards -->
+          <div id="sub-flashcards" class="hidden">
+            <div class="flashcard-container">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span id="card-counter" class="mono" style="font-size: 0.82rem; color: var(--muted);">Card 0 of 0</span>
+                <button type="button" class="btn btn-outline" id="add-custom-card-btn" style="padding: 5px 11px; font-size: 0.78rem;">+ Add Card</button>
+              </div>
+              <div class="scratch-card" id="scratch-card">
+                <div class="card-tag" id="card-side-label">PROMPT</div>
+                <div class="card-content" id="card-text">Upload your notes to generate Scratch Cards!</div>
+                <div style="font-size: 0.76rem; color: var(--muted); margin-top: 16px;">Click card to flip</div>
+              </div>
+              <div style="display: flex; justify-content: center; gap: 10px; margin-top: 14px;">
+                <button type="button" class="btn btn-outline" id="prev-card-btn">← Prev</button>
+                <button type="button" class="btn" id="flip-card-btn">Flip</button>
+                <button type="button" class="btn btn-outline" id="next-card-btn">Next →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scored Quiz / Mock Test (FR7 & FR9) -->
+          <div id="sub-quiz" class="hidden">
+            <div id="quiz-container">
+              <p style="color: var(--muted); text-align: center; padding: 36px 16px; font-size: 0.88rem;">
+                Generate your exam plan first to unlock a scored Mock Test with topic-level performance tracking.
+              </p>
+            </div>
+          </div>
+
+          <!-- Mentor Chat -->
+          <div id="sub-ask" class="hidden">
+            <div class="chat-box" id="mentor-chat-box">
+              <div class="msg msg-mentor">
+                👋 Your exam syllabus and rough notes are saved. Ask me to explain any topic from scratch, summarize notes, or quiz you!
+              </div>
+            </div>
+            <form id="mentor-chat-form" style="display: flex; gap: 8px;">
+              <input type="text" id="mentor-question" placeholder="Ask Gemini Mentor..." required />
+              <button type="submit" id="chat-send-btn" class="btn">Send</button>
+            </form>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- ==================== VIEW 2: GOALS, SUBJECTS & SMART PLANNER (FR3, FR4, FR5) ==================== -->
+    <main id="view-planner" class="container hidden">
+      <div class="two-col-equal">
+        <!-- FR3: Subjects & Topics Manager -->
+        <section class="card" style="margin-bottom: 0;">
+          <h2>📘 1. Academic Subjects & Syllabus Topics (FR3)</h2>
+          <form id="subject-topic-form" style="display:grid; grid-template-columns: 1fr 1.4fr auto; gap:8px; margin-bottom:14px;">
+            <input type="text" id="new-subj-name" placeholder="Subject (e.g., OS)" required />
+            <input type="text" id="new-subj-topics" placeholder="Topics (comma-separated)" required />
+            <button type="submit" class="btn">+ Add</button>
+          </form>
+          <div id="academic-subjects-list" style="max-height: 240px; overflow-y: auto;"></div>
+        </section>
+
+        <!-- FR4 & FR5: Study Goals & Auto Schedule Generator -->
+        <section class="card" style="margin-bottom: 0;">
+          <h2>🎯 2. Study Goals & Available Study Time (FR4 & FR5)</h2>
+          <form id="goal-planner-form">
+            <div class="grid-2">
+              <div class="form-field">
+                <label>Primary Study Goal *</label>
+                <input type="text" id="study-goal-input" placeholder="e.g., Score 9+ SGPA / Ace Term Test" required />
+              </div>
+              <div class="form-field">
+                <label>Available Study Hours / Day *</label>
+                <input type="number" id="daily-hours-input" min="1" max="16" value="3" required />
+              </div>
+            </div>
+            <div class="grid-2">
+              <div class="form-field">
+                <label>Preferred Start Time *</label>
+                <input type="time" id="preferred-start-time" value="18:00" required />
+              </div>
+              <div class="form-field">
+                <label>Focus Subject Priority</label>
+                <select id="goal-focus-subject"><option value="All">All Enrolled Subjects</option></select>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-full">⚡ Generate Personalized Daily & Weekly Plan</button>
           </form>
         </section>
       </div>
 
-      <!-- Tasks Table -->
-      <section class="card">
-        <div class="table-header">
-          <h2 style="margin-bottom: 0;">📋 Tasks & Deadlines</h2>
-          <div class="filters">
-            <select id="filter-subject"><option value="All">All Subjects</option></select>
-            <select id="filter-priority">
-              <option value="All">All Priorities</option>
-              <option value="High">High</option>
-              <option value="Medium">Medium</option>
-              <option value="Low">Low</option>
-            </select>
-            <select id="filter-status">
-              <option value="All">All Status</option>
-              <option value="Pending">Pending</option>
-              <option value="Completed">Completed</option>
-            </select>
+      <!-- Generated Daily & Weekly Study Plans (FR5) -->
+      <div class="two-col-equal">
+        <section class="card">
+          <h2>📅 Today's Personalized Daily Study Plan</h2>
+          <div id="daily-plan-container">
+            <p style="color:var(--muted); font-size:0.86rem;">Set your goal and available study hours above to generate today's time-blocked study plan.</p>
           </div>
-        </div>
+        </section>
 
+        <section class="card">
+          <h2>🗓️ Personalized 7-Day Weekly Study Plan</h2>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Day</th><th>Focus Subject & Topics</th><th>Duration</th></tr></thead>
+              <tbody id="weekly-plan-body">
+                <tr><td colspan="3" style="color:var(--muted); text-align:center;">No weekly plan generated yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <!-- Task & Deadline Tracker -->
+      <section class="card">
+        <h2>✅ Assignments & Study Tasks</h2>
+        <form id="task-form" style="display:grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap:10px; margin-bottom:16px;">
+          <input type="text" id="task-title" placeholder="Task or assignment title..." required />
+          <select id="task-subject" required></select>
+          <select id="task-priority">
+            <option value="High">High Priority</option>
+            <option value="Medium" selected>Medium Priority</option>
+            <option value="Low">Low Priority</option>
+          </select>
+          <input type="date" id="task-deadline" required />
+          <button type="submit" class="btn">+ Add Task</button>
+        </form>
         <div class="table-wrapper">
           <table>
-            <thead>
-              <tr>
-                <th>Task / Assignment</th>
-                <th>Subject</th>
-                <th>Priority</th>
-                <th>Deadline</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Task</th><th>Subject</th><th>Priority</th><th>Deadline</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody id="task-table-body"></tbody>
           </table>
         </div>
       </section>
+    </main>
 
-      <!-- Study Schedule / Timetable -->
-      <section class="card">
-        <h2>🗓️ Daily Study Schedule</h2>
-        <form id="schedule-form" class="schedule-grid">
-          <select id="sched-day">
-            <option>Monday</option>
-            <option>Tuesday</option>
-            <option>Wednesday</option>
-            <option>Thursday</option>
-            <option>Friday</option>
-            <option>Saturday</option>
-            <option>Sunday</option>
-          </select>
-          <input type="text" id="sched-time" placeholder="e.g., 6:00 PM - 7:30 PM" required />
-          <input type="text" id="sched-topic" placeholder="Subject & Topic to study" required />
-          <button type="submit" class="btn">Add Slot</button>
-        </form>
+    <!-- ==================== VIEW 3: STUDY MATERIALS & RESOURCES VAULT (FR6) ==================== -->
+    <main id="view-materials" class="container hidden">
+      <div class="two-col">
+        <section class="card" style="margin-bottom:0;">
+          <h2>📤 Upload & Organize Study Resource (FR6)</h2>
+          <form id="material-form">
+            <div class="form-field">
+              <label>Resource Title *</label>
+              <input type="text" id="mat-title" placeholder="e.g., Unit 2 AVL Tree Summary" required />
+            </div>
+            <div class="grid-2">
+              <div class="form-field">
+                <label>Subject *</label>
+                <select id="mat-subject" required></select>
+              </div>
+              <div class="form-field">
+                <label>Resource Type</label>
+                <select id="mat-type">
+                  <option value="Notes">Lecture / Rough Notes</option>
+                  <option value="Summary">Quick Revision Summary</option>
+                  <option value="Resource Link">Reference / Video Link</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Content / Summary / URL *</label>
+              <textarea id="mat-content" placeholder="Write or paste your notes, summary, or reference link..." required></textarea>
+            </div>
+            <div class="form-field">
+              <label>Attach File (.txt / .md)</label>
+              <input type="file" id="mat-file-upload" accept=".txt,.md" />
+            </div>
+            <button type="submit" class="btn btn-full">💾 Save to Resource Vault</button>
+          </form>
+        </section>
 
-        <div class="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>Day</th>
-                <th>Time Slot</th>
-                <th>Study Plan</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="schedule-table-body"></tbody>
-          </table>
-        </div>
+        <section class="card" style="margin-bottom:0;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <h2 style="margin-bottom:0;">📚 Organized Study Materials</h2>
+            <select id="filter-mat-subject" style="width:auto;"><option value="All">All Subjects</option></select>
+          </div>
+          <div id="materials-list-container"></div>
+        </section>
+      </div>
+    </main>
+
+    <!-- ==================== VIEW 4: ANALYTICS, SCORES & WEAK TOPICS (FR7 & FR9) ==================== -->
+    <main id="view-analytics" class="container hidden">
+      <section class="stats-grid">
+        <div class="stat-card"><span>Quizzes / Tests Taken</span><h3 id="stat-tests-taken">0</h3></div>
+        <div class="stat-card"><span>Average Test Score</span><h3 id="stat-avg-score" style="color:var(--accent);">0%</h3></div>
+        <div class="stat-card"><span>Tasks Completed</span><h3 id="stat-tasks-done" style="color:var(--success);">0</h3></div>
+        <div class="stat-card"><span>Weak Topics Flagged</span><h3 id="stat-weak-count" style="color:var(--danger);">0</h3></div>
       </section>
+
+      <div class="two-col-equal">
+        <section class="card">
+          <h2>⚠️ Weak Topics & Mentor Feedback (FR9)</h2>
+          <div id="weak-topics-container">
+            <p style="color:var(--muted); font-size:0.88rem;">Attempt a Scored Quiz in the AI Exam Mentor tab to automatically identify weak topics and get personalized feedback.</p>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>🏆 Quiz & Mock Test Score History (FR7)</h2>
+          <div class="table-wrapper">
+            <table>
+              <thead><tr><th>Subject</th><th>Score</th><th>Status</th><th>Date</th></tr></thead>
+              <tbody id="score-history-body">
+                <tr><td colspan="4" style="color:var(--muted); text-align:center;">No tests attempted yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- ==================== VIEW 5: COLLABORATIVE STUDY GROUPS (FR10) ==================== -->
+    <main id="view-groups" class="container hidden">
+      <div class="two-col">
+        <section class="card" style="margin-bottom:0;">
+          <h2>➕ Create or Join a Study Group (FR10)</h2>
+          <form id="create-group-form" style="margin-bottom:20px; padding-bottom:18px; border-bottom:1px solid var(--border);">
+            <div class="form-field">
+              <label>Create New Study Group</label>
+              <input type="text" id="new-group-name" placeholder="e.g., CSE 3rd Sem DSA Squad" required />
+            </div>
+            <div class="form-field">
+              <label>Primary Subject / Focus</label>
+              <input type="text" id="new-group-subject" placeholder="e.g., Data Structures & Algorithms" required />
+            </div>
+            <button type="submit" class="btn btn-full">Create Group & Generate Invite Link</button>
+          </form>
+
+          <form id="join-group-form">
+            <div class="form-field">
+              <label>Join via Invitation Code / Link</label>
+              <input type="text" id="join-invite-code" placeholder="Paste invite code (e.g., GRP-8492)" required />
+            </div>
+            <button type="submit" class="btn btn-outline btn-full">Join Study Group →</button>
+          </form>
+        </section>
+
+        <section class="card" style="margin-bottom:0;">
+          <h2>👥 Your Study Groups & Shared Resources</h2>
+          <div id="groups-container"></div>
+        </section>
+      </div>
     </main>
   </div>
 
   <script>
-    // ==================== AUTHENTICATION LOGIC ====================
-    const authScreen = document.getElementById('auth-screen');
-    const appScreen = document.getElementById('app-screen');
-    const registerForm = document.getElementById('register-form');
-    const loginForm = document.getElementById('login-form');
-    const tabRegister = document.getElementById('tab-register');
-    const tabLogin = document.getElementById('tab-login');
+    // ==================== NFR1: SECURITY UTILITIES (SHA-256 & SANITIZATION) ====================
+    async function hashPassword(password) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(password);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function escapeHTML(str) {
+      return String(str || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+    }
+
+    // ==================== GEMINI API SERVICE (WITH AUTOMATIC KEY SANITIZATION) ====================
+    const GEMINI_MODEL = 'gemini-4-hydrogen';
+    let geminiApiKey = (localStorage.getItem('sf_gemini_api_key') || '').replace(/[^\x20-\x7E]/g, '').trim();
+    const apiKeyBtn = document.getElementById('api-key-btn');
+
+    function updateApiKeyButton() {
+      if (geminiApiKey) {
+        apiKeyBtn.textContent = '✅ Gemini Connected';
+        apiKeyBtn.classList.add('api-connected');
+      } else {
+        apiKeyBtn.textContent = '🔑 Connect Gemini API';
+        apiKeyBtn.classList.remove('api-connected');
+      }
+    }
+    updateApiKeyButton();
+
+    apiKeyBtn.addEventListener('click', () => {
+      const entered = prompt('Paste your Google AI Studio Gemini API Key (starts with AIza...):\nLeave blank to disconnect.', geminiApiKey);
+      if (entered === null) return;
+      geminiApiKey = entered.replace(/[^\x20-\x7E]/g, '').trim();
+      if (geminiApiKey) localStorage.setItem('sf_gemini_api_key', geminiApiKey);
+      else localStorage.removeItem('sf_gemini_api_key');
+      updateApiKeyButton();
+    });
+
+    async function callGeminiAPI(promptText, expectJson = false) {
+      if (!geminiApiKey) throw new Error('NO_KEY');
+      const cleanKey = geminiApiKey.replace(/[^\x20-\x7E]/g, '').trim();
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+      const payload = { contents: [{ role: 'user', parts: [{ text: promptText }] }] };
+      if (expectJson) payload.generationConfig = { responseMimeType: 'application/json' };
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': cleanKey },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData?.error?.message || `HTTP ${response.status}`);
+      }
+      const data = await response.json();
+      return data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    }
+
+    // ==================== THEME SWITCHER (NFR2 & NFR3) ====================
+    const htmlEl = document.documentElement;
+    function applyTheme(theme) {
+      htmlEl.setAttribute('data-theme', theme);
+      localStorage.setItem('sf_theme', theme);
+      document.getElementById('theme-toggle-btn').textContent = theme === 'dark' ? '☀️ Light' : '🌙 Dark';
+      document.getElementById('auth-theme-btn').textContent = theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+    }
+    applyTheme(localStorage.getItem('sf_theme') || 'dark');
+    document.getElementById('theme-toggle-btn').addEventListener('click', () => applyTheme(htmlEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+    document.getElementById('auth-theme-btn').addEventListener('click', () => applyTheme(htmlEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'));
+
+    // ==================== APPLICATION STATE ====================
+    let users = JSON.parse(localStorage.getItem('sf_users_v2')) || [];
+    let currentUser = JSON.parse(localStorage.getItem('sf_current_user_v2')) || null;
+    let userData = null; // Stores subjects, tasks, materials, examVault, quizHistory, weakTopics, plans, reminders
+    let sharedGroups = JSON.parse(localStorage.getItem('sf_shared_groups')) || [];
+    let currentCardIdx = 0, isCardFlipped = false;
+
+    function getDefaultUserData(user) {
+      return {
+        academicSubjects: [
+          { name: 'Data Structures', topics: ['Circular Queue', 'Doubly Linked List', 'Binary Search Tree', 'AVL Tree'] },
+          { name: 'Operating Systems', topics: ['CPU Scheduling', 'Deadlocks', 'Paging & Segmentation'] }
+        ],
+        tasks: [],
+        materials: [],
+        examVault: null,
+        quizHistory: [],
+        weakTopics: [],
+        studyGoal: '',
+        dailyHours: 3,
+        dailyPlan: [],
+        weeklyPlan: [],
+        reminders: [
+          { id: 1, text: `Welcome ${user.name}! Set your study goal & upload your syllabus to start.`, time: 'Now' }
+        ]
+      };
+    }
+
+    function saveUserData() {
+      if (!currentUser || !userData) return;
+      localStorage.setItem(`sf_data_${currentUser.email}`, JSON.stringify(userData));
+      localStorage.setItem('sf_shared_groups', JSON.stringify(sharedGroups));
+    }
+
+    // ==================== AUTHENTICATION HANDLERS (FR1, FR2, FR3) ====================
     const authError = document.getElementById('auth-error');
+    function showError(msg) { authError.textContent = msg; authError.style.display = 'block'; }
+    function clearError() { authError.style.display = 'none'; }
 
-    let users = JSON.parse(localStorage.getItem('sf_users')) || [];
-    let currentUser = JSON.parse(localStorage.getItem('sf_current_user')) || null;
-
-    let subjects = [];
-    let tasks = [];
-    let schedules = [];
-
-    function showError(msg) {
-      authError.textContent = msg;
-      authError.style.display = 'block';
-    }
-
-    function clearError() {
-      authError.style.display = 'none';
-    }
-
-    // Switch Tabs
-    tabRegister.addEventListener('click', () => {
+    document.getElementById('tab-register').addEventListener('click', () => {
       clearError();
-      tabRegister.classList.add('active');
-      tabLogin.classList.remove('active');
-      registerForm.classList.remove('hidden');
-      loginForm.classList.add('hidden');
+      document.getElementById('tab-register').classList.add('active');
+      document.getElementById('tab-login').classList.remove('active');
+      document.getElementById('register-form').classList.remove('hidden');
+      document.getElementById('login-form').classList.add('hidden');
     });
 
-    tabLogin.addEventListener('click', () => {
+    document.getElementById('tab-login').addEventListener('click', () => {
       clearError();
-      tabLogin.classList.add('active');
-      tabRegister.classList.remove('active');
-      loginForm.classList.remove('hidden');
-      registerForm.classList.add('hidden');
+      document.getElementById('tab-login').classList.add('active');
+      document.getElementById('tab-register').classList.remove('active');
+      document.getElementById('login-form').classList.remove('hidden');
+      document.getElementById('register-form').classList.add('hidden');
     });
 
-    // Handle Student Registration
-    registerForm.addEventListener('submit', (e) => {
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       clearError();
-
-      const id = document.getElementById('reg-id').value.trim().toLowerCase();
-      if (users.some(u => u.id === id)) {
-        showError('An account with this Email / Roll No. already exists. Please login.');
-        return;
+      const email = document.getElementById('reg-email').value.trim().toLowerCase();
+      const phone = document.getElementById('reg-phone').value.trim();
+      if (users.some(u => u.email === email || u.phone === phone)) {
+        return showError('An account with this Email or Phone Number already exists.');
       }
 
+      const passwordHash = await hashPassword(document.getElementById('reg-password').value);
       const newUser = {
         name: document.getElementById('reg-name').value.trim(),
-        university: document.getElementById('reg-university').value.trim(),
+        email,
+        phone,
+        college: document.getElementById('reg-college').value.trim(),
         course: document.getElementById('reg-course').value.trim(),
+        branch: document.getElementById('reg-branch').value.trim(),
         semester: document.getElementById('reg-semester').value.trim(),
-        id: id,
-        password: document.getElementById('reg-password').value
+        passwordHash
       };
 
       users.push(newUser);
-      localStorage.setItem('sf_users', JSON.stringify(users));
+      localStorage.setItem('sf_users_v2', JSON.stringify(users));
       loginStudent(newUser);
     });
 
-    // Handle Student Login
-    loginForm.addEventListener('submit', (e) => {
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       clearError();
-
-      const id = document.getElementById('login-id').value.trim().toLowerCase();
-      const password = document.getElementById('login-password').value;
-
-      const matchedUser = users.find(u => u.id === id && u.password === password);
-      if (!matchedUser) {
-        showError('Invalid Email/Roll No. or Password. If you are new, click "Student Register".');
-        return;
-      }
-
-      loginStudent(matchedUser);
+      const id = document.getElementById('login-identifier').value.trim().toLowerCase();
+      const passwordHash = await hashPassword(document.getElementById('login-password').value);
+      const matched = users.find(u => (u.email === id || u.phone === id) && u.passwordHash === passwordHash);
+      if (!matched) return showError('Invalid Email/Phone or Password.');
+      loginStudent(matched);
     });
 
     function loginStudent(user) {
       currentUser = user;
-      localStorage.setItem('sf_current_user', JSON.stringify(user));
+      localStorage.setItem('sf_current_user_v2', JSON.stringify(user));
 
-      // Populate Student Header Info
       document.getElementById('nav-student-name').textContent = user.name;
-      document.getElementById('nav-university').textContent = '🏛️ ' + user.university;
-      document.getElementById('nav-course').textContent = `🎓 ${user.course} (${user.semester})`;
+      document.getElementById('nav-college').textContent = user.college;
+      document.getElementById('nav-academic').textContent = `${user.course} (${user.branch}) • ${user.semester}`;
 
-      // Load student-specific study data
-      subjects = JSON.parse(localStorage.getItem(`sf_subjects_${user.id}`)) || ['Java', 'Mathematics', 'Python'];
-      tasks = JSON.parse(localStorage.getItem(`sf_tasks_${user.id}`)) || [];
-      schedules = JSON.parse(localStorage.getItem(`sf_schedules_${user.id}`)) || [];
+      userData = JSON.parse(localStorage.getItem(`sf_data_${user.email}`)) || getDefaultUserData(user);
 
-      authScreen.classList.add('hidden');
-      appScreen.classList.remove('hidden');
+      // Check URL invite parameter (?invite=GRP-XXXX)
+      const params = new URLSearchParams(window.location.search);
+      const inviteCode = params.get('invite');
+      if (inviteCode) {
+        joinGroupByCode(inviteCode);
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
 
-      renderSubjects();
-      renderTasks();
-      renderSchedules();
+      document.getElementById('auth-screen').classList.add('hidden');
+      document.getElementById('app-screen').classList.remove('hidden');
+
+      refreshAllViews();
     }
 
     document.getElementById('logout-btn').addEventListener('click', () => {
-      localStorage.removeItem('sf_current_user');
+      localStorage.removeItem('sf_current_user_v2');
       currentUser = null;
-      appScreen.classList.add('hidden');
-      authScreen.classList.remove('hidden');
-      loginForm.reset();
-      registerForm.reset();
+      document.getElementById('app-screen').classList.add('hidden');
+      document.getElementById('auth-screen').classList.remove('hidden');
     });
 
-    function saveAll() {
-      if (!currentUser) return;
-      localStorage.setItem(`sf_subjects_${currentUser.id}`, JSON.stringify(subjects));
-      localStorage.setItem(`sf_tasks_${currentUser.id}`, JSON.stringify(tasks));
-      localStorage.setItem(`sf_schedules_${currentUser.id}`, JSON.stringify(schedules));
+    function refreshAllViews() {
+      renderAcademicSubjects();
+      renderPlans();
+      renderTasks();
+      renderMaterials();
+      loadExamVaultUI();
+      renderAnalytics();
+      renderReminders();
+      renderGroups();
     }
 
-    // ==================== SUBJECTS ====================
-    const subjectInput = document.getElementById('subject-input');
-    const subjectList = document.getElementById('subject-list');
-    const taskSubject = document.getElementById('task-subject');
-    const filterSubject = document.getElementById('filter-subject');
+    // ==================== NAVIGATION ====================
+    document.querySelectorAll('.main-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.main-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        ['view-mentor', 'view-planner', 'view-materials', 'view-analytics', 'view-groups'].forEach(v => {
+          document.getElementById(v).classList.add('hidden');
+        });
+        document.getElementById(btn.dataset.view).classList.remove('hidden');
+      });
+    });
 
-    function renderSubjects() {
-      subjectList.innerHTML = '';
-      taskSubject.innerHTML = '';
-      filterSubject.innerHTML = '<option value="All">All Subjects</option>';
+    document.querySelectorAll('.subtab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        ['sub-roadmap', 'sub-flashcards', 'sub-quiz', 'sub-ask'].forEach(id => {
+          document.getElementById(id).classList.add('hidden');
+        });
+        document.getElementById(btn.dataset.sub).classList.remove('hidden');
+      });
+    });
 
-      subjects.forEach((subj, index) => {
-        const chip = document.createElement('div');
-        chip.className = 'chip';
-        chip.innerHTML = `${subj} <button type="button" onclick="removeSubject(${index})">×</button>`;
-        subjectList.appendChild(chip);
+    // ==================== FR8: NOTIFICATIONS & REMINDERS ====================
+    const notifPanel = document.getElementById('notif-panel');
+    document.getElementById('notif-toggle-btn').addEventListener('click', () => notifPanel.classList.toggle('hidden'));
 
-        taskSubject.add(new Option(subj, subj));
-        filterSubject.add(new Option(subj, subj));
+    document.getElementById('enable-browser-notif').addEventListener('click', async () => {
+      if (!('Notification' in window)) return alert('Browser notifications are not supported.');
+      const perm = await Notification.requestPermission();
+      if (perm === 'granted') {
+        new Notification('StudyFlow OS', { body: 'Study & Exam Reminders Enabled!' });
+      }
+    });
+
+    function addReminder(text) {
+      userData.reminders.unshift({ id: Date.now(), text, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
+      saveUserData();
+      renderReminders();
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('StudyFlow Reminder', { body: text });
+      }
+    }
+
+    document.getElementById('custom-reminder-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('reminder-text');
+      if (!input.value.trim()) return;
+      addReminder(input.value.trim());
+      input.value = '';
+    });
+
+    function renderReminders() {
+      // Combine custom reminders + upcoming due tasks
+      const dueTasks = userData.tasks.filter(t => !t.completed).map(t => ({
+        text: `📌 Due ${t.deadline}: ${t.title} (${t.subject})`,
+        time: t.priority
+      }));
+      const allAlerts = [...dueTasks, ...userData.reminders];
+      document.getElementById('notif-count').textContent = allAlerts.length;
+
+      const list = document.getElementById('notif-list');
+      if (!allAlerts.length) {
+        list.innerHTML = `<p style="color:var(--muted);">No active reminders.</p>`;
+        return;
+      }
+      list.innerHTML = allAlerts.map(r => `
+        <div style="padding:8px 0; border-bottom:1px solid var(--border);">
+          <div>${escapeHTML(r.text)}</div>
+          <small style="color:var(--muted);">${escapeHTML(r.time)}</small>
+        </div>
+      `).join('');
+    }
+
+    // ==================== FR3, FR4, FR5: SUBJECTS, GOALS & SMART PLANNER ====================
+    document.getElementById('subject-topic-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('new-subj-name').value.trim();
+      const topics = document.getElementById('new-subj-topics').value.split(',').map(t => t.trim()).filter(Boolean);
+      const existing = userData.academicSubjects.find(s => s.name.toLowerCase() === name.toLowerCase());
+      if (existing) {
+        existing.topics = Array.from(new Set([...existing.topics, ...topics]));
+      } else {
+        userData.academicSubjects.push({ name, topics });
+      }
+      document.getElementById('new-subj-name').value = '';
+      document.getElementById('new-subj-topics').value = '';
+      saveUserData();
+      renderAcademicSubjects();
+    });
+
+    function removeAcademicSubject(idx) {
+      userData.academicSubjects.splice(idx, 1);
+      saveUserData();
+      renderAcademicSubjects();
+    }
+
+    function renderAcademicSubjects() {
+      const container = document.getElementById('academic-subjects-list');
+      const selects = [
+        document.getElementById('goal-focus-subject'),
+        document.getElementById('task-subject'),
+        document.getElementById('mat-subject'),
+        document.getElementById('filter-subject')
+      ];
+
+      selects[0].innerHTML = '<option value="All">All Enrolled Subjects</option>';
+      selects[1].innerHTML = '';
+      selects[2].innerHTML = '';
+      selects[3].innerHTML = '<option value="All">All Subjects</option>';
+
+      container.innerHTML = '';
+      userData.academicSubjects.forEach((subj, idx) => {
+        const div = document.createElement('div');
+        div.className = 'material-card';
+        div.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <strong>📘 ${escapeHTML(subj.name)}</strong>
+            <button type="button" class="action-btn btn-del" onclick="removeAcademicSubject(${idx})">Remove</button>
+          </div>
+          <div style="margin-top:6px;">
+            ${subj.topics.map(t => `<span class="chip">${escapeHTML(t)}</span>`).join('')}
+          </div>
+        `;
+        container.appendChild(div);
+
+        selects.forEach(sel => sel.add(new Option(subj.name, subj.name)));
       });
     }
 
-    document.getElementById('add-subject-btn').addEventListener('click', () => {
-      const val = subjectInput.value.trim();
-      if (val && !subjects.includes(val)) {
-        subjects.push(val);
-        subjectInput.value = '';
-        saveAll();
-        renderSubjects();
+    // FR4 & FR5: Generate Daily & Weekly Personalized Study Plans
+    document.getElementById('goal-planner-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const goal = document.getElementById('study-goal-input').value.trim();
+      const hours = Number(document.getElementById('daily-hours-input').value);
+      const startTime = document.getElementById('preferred-start-time').value;
+      const focusSubj = document.getElementById('goal-focus-subject').value;
+
+      const pool = focusSubj === 'All'
+        ? userData.academicSubjects
+        : userData.academicSubjects.filter(s => s.name === focusSubj);
+
+      if (!pool.length) return alert('Add at least one subject first!');
+
+      // Build Daily Time-Blocked Plan
+      const [startH, startM] = startTime.split(':').map(Number);
+      const dailyPlan = [];
+      for (let i = 0; i < hours; i++) {
+        const subj = pool[i % pool.length];
+        const topic = subj.topics[i % Math.max(1, subj.topics.length)] || 'Core Concepts & Practice';
+        const h1 = String((startH + i) % 24).padStart(2, '0');
+        const h2 = String((startH + i + 1) % 24).padStart(2, '0');
+        const mm = String(startM).padStart(2, '0');
+        dailyPlan.push({
+          slot: `${h1}:${mm} - ${h2}:${mm}`,
+          subject: subj.name,
+          topic,
+          activity: i === hours - 1 ? 'Active Recall Quiz & Revision' : 'Deep Concept Study & Notes'
+        });
       }
+
+      // Build 7-Day Weekly Plan (prioritizing weak topics if any exist)
+      const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      const weeklyPlan = days.map((day, idx) => {
+        if (day === 'Sunday') {
+          return { day, focus: 'Weekly Mock Test & Weak Topic Revision', duration: `${hours} hrs` };
+        }
+        const subj = pool[idx % pool.length];
+        const weakMatch = userData.weakTopics.find(w => w.subject === subj.name);
+        const topicFocus = weakMatch
+          ? `⚠️ Priority Weak Topic: ${weakMatch.topic}`
+          : subj.topics.slice(0, 2).join(', ') || 'Syllabus Modules';
+        return { day, focus: `${subj.name}: ${topicFocus}`, duration: `${hours} hrs` };
+      });
+
+      userData.studyGoal = goal;
+      userData.dailyHours = hours;
+      userData.dailyPlan = dailyPlan;
+      userData.weeklyPlan = weeklyPlan;
+      saveUserData();
+      renderPlans();
+      addReminder(`Generated new ${hours}h/day study plan for goal: "${goal}"`);
     });
 
-    function removeSubject(index) {
-      subjects.splice(index, 1);
-      saveAll();
-      renderSubjects();
+    function renderPlans() {
+      const dailyContainer = document.getElementById('daily-plan-container');
+      const weeklyBody = document.getElementById('weekly-plan-body');
+
+      if (userData.dailyPlan?.length) {
+        dailyContainer.innerHTML = `<div style="margin-bottom:10px; font-size:0.84rem; color:var(--accent); font-weight:600;">Goal: ${escapeHTML(userData.studyGoal)} (${userData.dailyHours} hrs/day)</div>` +
+          userData.dailyPlan.map(item => `
+            <div class="roadmap-item" style="justify-content:space-between;">
+              <div>
+                <span class="mono" style="font-size:0.8rem; color:var(--accent); font-weight:700;">${escapeHTML(item.slot)}</span>
+                <strong style="margin-left:8px;">${escapeHTML(item.subject)}</strong> — ${escapeHTML(item.topic)}
+              </div>
+              <span class="pill">${escapeHTML(item.activity)}</span>
+            </div>
+          `).join('');
+      }
+
+      if (userData.weeklyPlan?.length) {
+        weeklyBody.innerHTML = userData.weeklyPlan.map(w => `
+          <tr>
+            <td><strong>${escapeHTML(w.day)}</strong></td>
+            <td>${escapeHTML(w.focus)}</td>
+            <td class="mono">${escapeHTML(w.duration)}</td>
+          </tr>
+        `).join('');
+      }
     }
 
     // ==================== TASKS ====================
-    const taskForm = document.getElementById('task-form');
-    const taskTableBody = document.getElementById('task-table-body');
-    const filterPriority = document.getElementById('filter-priority');
-    const filterStatus = document.getElementById('filter-status');
-
-    taskForm.addEventListener('submit', (e) => {
+    document.getElementById('task-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      if (!taskSubject.value) {
-        alert('Please add at least one subject first!');
-        return;
-      }
-      tasks.push({
+      userData.tasks.push({
         id: Date.now(),
         title: document.getElementById('task-title').value.trim(),
-        subject: taskSubject.value,
+        subject: document.getElementById('task-subject').value,
         priority: document.getElementById('task-priority').value,
         deadline: document.getElementById('task-deadline').value,
         completed: false
       });
       document.getElementById('task-title').value = '';
-      saveAll();
+      saveUserData();
       renderTasks();
+      renderReminders();
+      renderAnalytics();
     });
 
     function toggleTask(id) {
-      tasks = tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
-      saveAll();
+      userData.tasks = userData.tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+      saveUserData();
       renderTasks();
+      renderReminders();
+      renderAnalytics();
     }
 
     function deleteTask(id) {
-      tasks = tasks.filter(t => t.id !== id);
-      saveAll();
+      userData.tasks = userData.tasks.filter(t => t.id !== id);
+      saveUserData();
       renderTasks();
+      renderReminders();
+      renderAnalytics();
     }
 
     function renderTasks() {
-      const total = tasks.length;
-      const done = tasks.filter(t => t.completed).length;
-      const pending = total - done;
-      const percent = total === 0 ? 0 : Math.round((done / total) * 100);
-
-      document.getElementById('total-tasks').textContent = total;
-      document.getElementById('completed-tasks').textContent = done;
-      document.getElementById('pending-tasks').textContent = pending;
-      document.getElementById('progress-percent').textContent = percent + '%';
-      document.getElementById('progress-fill').style.width = percent + '%';
-
-      const sVal = filterSubject.value;
-      const pVal = filterPriority.value;
-      const stVal = filterStatus.value;
-
-      const filtered = tasks.filter(t => {
-        const mSub = sVal === 'All' || t.subject === sVal;
-        const mPri = pVal === 'All' || t.priority === pVal;
-        const mSta = stVal === 'All' || (stVal === 'Completed' ? t.completed : !t.completed);
-        return mSub && mPri && mSta;
-      });
-
-      taskTableBody.innerHTML = '';
-      if (filtered.length === 0) {
-        taskTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#64748b; padding:24px;">No tasks found. Add a study task above!</td></tr>`;
+      const tbody = document.getElementById('task-table-body');
+      if (!userData.tasks.length) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--muted);">No tasks added yet.</td></tr>`;
         return;
       }
-
-      filtered.forEach(t => {
-        const tr = document.createElement('tr');
-        if (t.completed) tr.className = 'completed-row';
-        tr.innerHTML = `
-          <td class="task-name"><strong>${t.title}</strong></td>
-          <td>${t.subject}</td>
+      tbody.innerHTML = userData.tasks.map(t => `
+        <tr style="${t.completed ? 'opacity:0.55; text-decoration:line-through;' : ''}">
+          <td><strong>${escapeHTML(t.title)}</strong></td>
+          <td>${escapeHTML(t.subject)}</td>
           <td><span class="badge badge-${t.priority}">${t.priority}</span></td>
-          <td>${t.deadline}</td>
-          <td><span class="status-pill ${t.completed ? 'status-done' : 'status-pending'}">${t.completed ? 'Completed' : 'Pending'}</span></td>
+          <td class="mono" style="font-size:0.8rem;">${t.deadline}</td>
+          <td>${t.completed ? '✅ Done' : '⏳ Pending'}</td>
           <td>
             <button class="action-btn btn-check" onclick="toggleTask(${t.id})">${t.completed ? 'Undo' : 'Done'}</button>
             <button class="action-btn btn-del" onclick="deleteTask(${t.id})">Delete</button>
           </td>
-        `;
-        taskTableBody.appendChild(tr);
-      });
+        </tr>
+      `).join('');
     }
 
-    filterSubject.addEventListener('change', renderTasks);
-    filterPriority.addEventListener('change', renderTasks);
-    filterStatus.addEventListener('change', renderTasks);
-
-    // ==================== SCHEDULE ====================
-    const scheduleForm = document.getElementById('schedule-form');
-    const scheduleTableBody = document.getElementById('schedule-table-body');
-
-    scheduleForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      schedules.push({
-        id: Date.now(),
-        day: document.getElementById('sched-day').value,
-        time: document.getElementById('sched-time').value.trim(),
-        topic: document.getElementById('sched-topic').value.trim()
-      });
-      document.getElementById('sched-time').value = '';
-      document.getElementById('sched-topic').value = '';
-      saveAll();
-      renderSchedules();
+    // ==================== FR6: STUDY MATERIALS & NOTES VAULT ====================
+    document.getElementById('mat-file-upload').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => { document.getElementById('mat-content').value = ev.target.result; };
+      reader.readAsText(file);
     });
 
-    function deleteSchedule(id) {
-      schedules = schedules.filter(s => s.id !== id);
-      saveAll();
-      renderSchedules();
+    document.getElementById('material-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      userData.materials.unshift({
+        id: Date.now(),
+        title: document.getElementById('mat-title').value.trim(),
+        subject: document.getElementById('mat-subject').value,
+        type: document.getElementById('mat-type').value,
+        content: document.getElementById('mat-content').value.trim(),
+        date: new Date().toLocaleDateString()
+      });
+      e.target.reset();
+      saveUserData();
+      renderMaterials();
+    });
+
+    function deleteMaterial(id) {
+      userData.materials = userData.materials.filter(m => m.id !== id);
+      saveUserData();
+      renderMaterials();
     }
 
-    function renderSchedules() {
-      scheduleTableBody.innerHTML = '';
-      if (schedules.length === 0) {
-        scheduleTableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#64748b; padding:20px;">No study slots added yet.</td></tr>`;
+    function loadMaterialIntoMentor(id) {
+      const mat = userData.materials.find(m => m.id === id);
+      if (!mat) return;
+      document.getElementById('exam-subject').value = mat.subject;
+      document.getElementById('exam-notes').value = mat.content;
+      document.querySelector('[data-view="view-mentor"]').click();
+    }
+
+    document.getElementById('filter-mat-subject').addEventListener('change', renderMaterials);
+
+    function renderMaterials() {
+      const container = document.getElementById('materials-list-container');
+      const filter = document.getElementById('filter-mat-subject').value;
+      const list = filter === 'All' ? userData.materials : userData.materials.filter(m => m.subject === filter);
+
+      if (!list.length) {
+        container.innerHTML = `<p style="color:var(--muted); font-size:0.88rem;">No study materials saved yet. Upload notes or summaries on the left.</p>`;
         return;
       }
-      schedules.forEach(s => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td><strong>${s.day}</strong></td>
-          <td>${s.time}</td>
-          <td>${s.topic}</td>
-          <td><button class="action-btn btn-del" onclick="deleteSchedule(${s.id})">Remove</button></td>
-        `;
-        scheduleTableBody.appendChild(tr);
+
+      container.innerHTML = list.map(m => `
+        <div class="material-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+            <div>
+              <strong>${escapeHTML(m.title)}</strong>
+              <span class="pill" style="margin-left:6px;">${escapeHTML(m.subject)}</span>
+              <span class="stage-badge" style="margin-left:4px;">${escapeHTML(m.type)}</span>
+            </div>
+            <div>
+              <button type="button" class="action-btn btn-check" onclick="loadMaterialIntoMentor(${m.id})">🧠 Study with Mentor</button>
+              <button type="button" class="action-btn btn-del" onclick="deleteMaterial(${m.id})">Delete</button>
+            </div>
+          </div>
+          <p style="font-size:0.85rem; color:var(--muted); margin-top:8px; white-space:pre-line;">${escapeHTML(m.content.substring(0, 260))}${m.content.length > 260 ? '...' : ''}</p>
+        </div>
+      `).join('');
+    }
+
+    // ==================== AI EXAM MENTOR, FLASHCARDS & SCORED QUIZ (FR7 & FR9) ====================
+    document.getElementById('notes-file-input').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const box = document.getElementById('exam-notes');
+        box.value = (box.value ? box.value + '\n\n' : '') + ev.target.result;
+      };
+      reader.readAsText(file);
+    });
+
+    function buildOfflineExamPackage(subject, date, rawTopics, rawNotes) {
+      const topicList = rawTopics.split(/[\n,]+/).map(t => t.trim()).filter(Boolean);
+      const noteLines = rawNotes.split(/\n+/).map(l => l.trim()).filter(l => l.length > 4);
+
+      const roadmap = [
+        { stage: 'Stage 1: Scratch (Core Definitions)', level: 'Beginner', steps: topicList.map(t => ({ text: `Learn basic definition & purpose of "${t}"`, done: false })) },
+        { stage: 'Stage 2: Foundation (Rough Notes Expansion)', level: 'Intermediate', steps: (noteLines.length ? noteLines.slice(0, 5) : topicList).map(n => ({ text: `Revise & expand: "${n.substring(0, 80)}"`, done: false })) },
+        { stage: 'Stage 3: Practice (Examples & Dry Runs)', level: 'Advanced', steps: topicList.map(t => ({ text: `Solve 2 exam problems on "${t}"`, done: false })) },
+        { stage: 'Stage 4: Pro Level (Active Recall & Mock Test)', level: 'Exam Ready', steps: [{ text: 'Complete Scratch Cards & score 80%+ on Mock Test', done: false }] }
+      ];
+
+      const flashcards = topicList.map(topic => ({
+        front: `Core Concept & Exam Key Points:\n${topic}`,
+        back: `1. Clear 2-line definition of ${topic}\n2. Step-by-step working & complexity\n3. Key edge cases & diagram.`
+      }));
+
+      const quiz = topicList.map((topic, idx) => {
+        const correctAns = `Structured rules, working mechanism, and problem-solving for ${topic}`;
+        const options = [correctAns, 'Unstructured trial without rules', 'Deprecated memory method', 'None of the syllabus concepts'].sort(() => Math.random() - 0.5);
+        return { q: `Q${idx + 1}. In ${subject}, what is essential when answering an exam question on "${topic}"?`, topic, options, answer: correctAns };
       });
+
+      return { subject, date, rawTopics, rawNotes, topicList, noteLines, roadmap, flashcards, quiz };
+    }
+
+    document.getElementById('mentor-setup-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const subject = document.getElementById('exam-subject').value.trim();
+      const date = document.getElementById('exam-date').value;
+      const rawTopics = document.getElementById('exam-topics').value.trim();
+      const rawNotes = document.getElementById('exam-notes').value.trim();
+      const btn = document.getElementById('generate-plan-btn');
+
+      // Also save notes automatically to Study Materials Vault (FR6)
+      if (rawNotes) {
+        userData.materials.unshift({
+          id: Date.now(),
+          title: `${subject} — Rough Exam Notes`,
+          subject,
+          type: 'Notes',
+          content: rawNotes,
+          date: new Date().toLocaleDateString()
+        });
+      }
+
+      if (!geminiApiKey) {
+        userData.examVault = buildOfflineExamPackage(subject, date, rawTopics, rawNotes);
+        saveUserData();
+        refreshAllViews();
+        addReminder(`Exam plan & mock test ready for ${subject} (Exam: ${date})`);
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Gemini AI is building your plan & quiz...';
+
+      try {
+        const prompt = `You are an expert university exam mentor. Subject: "${subject}", Exam Date: "${date}".
+Syllabus Topics: ${rawTopics}
+Rough Notes: ${rawNotes || 'None provided'}
+
+Return strict JSON matching this schema:
+{
+  "roadmap": [
+    { "stage": "Stage 1: Scratch (Core Intuition)", "level": "Beginner", "steps": [{"text": "step"}] },
+    { "stage": "Stage 2: Foundation (Notes Expansion)", "level": "Intermediate", "steps": [{"text": "step"}] },
+    { "stage": "Stage 3: Practice & Problem Solving", "level": "Advanced", "steps": [{"text": "step"}] },
+    { "stage": "Stage 4: Pro Level (Exam Mastery)", "level": "Exam Ready", "steps": [{"text": "step"}] }
+  ],
+  "flashcards": [
+    { "front": "Question/Prompt", "back": "Detailed exam-ready answer" }
+  ],
+  "quiz": [
+    { "q": "Exam MCQ question", "topic": "Exact topic name from syllabus", "options": ["A", "B", "C", "D"], "answer": "Exact text of correct option" }
+  ]
+}
+Include at least 6 flashcards and 5 MCQs tagged with their topic name.`;
+
+        const parsed = JSON.parse(await callGeminiAPI(prompt, true));
+        parsed.roadmap.forEach(st => { st.steps = st.steps.map(s => ({ text: s.text, done: false })); });
+
+        const topicList = rawTopics.split(/[\n,]+/).map(t => t.trim()).filter(Boolean);
+        const noteLines = rawNotes.split(/\n+/).map(l => l.trim()).filter(Boolean);
+        userData.examVault = { subject, date, rawTopics, rawNotes, topicList, noteLines, roadmap: parsed.roadmap, flashcards: parsed.flashcards, quiz: parsed.quiz };
+      } catch (err) {
+        alert(`Gemini API Error: ${err.message}\nGenerated local study plan instead.`);
+        userData.examVault = buildOfflineExamPackage(subject, date, rawTopics, rawNotes);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '✨ Generate Scratch-to-Pro Plan & Test';
+        saveUserData();
+        refreshAllViews();
+        addReminder(`AI Exam Package ready for ${subject} (${date})`);
+      }
+    });
+
+    function loadExamVaultUI() {
+      const vault = userData.examVault;
+      if (!vault) return;
+      document.getElementById('exam-subject').value = vault.subject;
+      document.getElementById('exam-date').value = vault.date;
+      document.getElementById('exam-topics').value = vault.rawTopics;
+      document.getElementById('exam-notes').value = vault.rawNotes;
+
+      const diffDays = Math.ceil((new Date(vault.date) - new Date()) / (1000 * 60 * 60 * 24));
+      const badge = document.getElementById('exam-countdown-badge');
+      badge.textContent = diffDays < 0 ? `${vault.subject} • Done` : diffDays === 0 ? `🔥 ${vault.subject} • TODAY` : `⏳ ${vault.subject} • ${diffDays}d left`;
+
+      renderRoadmap();
+      currentCardIdx = 0; isCardFlipped = false;
+      renderFlashcard();
+      renderScoredQuiz();
+    }
+
+    function renderRoadmap() {
+      const container = document.getElementById('roadmap-container');
+      const vault = userData.examVault;
+      if (!vault?.roadmap) return;
+      let total = 0, done = 0;
+      container.innerHTML = vault.roadmap.map((st, sIdx) => {
+        const stepsHtml = st.steps.map((step, stepIdx) => {
+          total++; if (step.done) done++;
+          return `<div class="roadmap-item"><input type="checkbox" ${step.done ? 'checked' : ''} onchange="toggleRoadmapStep(${sIdx}, ${stepIdx})" /><span style="${step.done ? 'text-decoration:line-through; color:var(--muted);' : ''}">${escapeHTML(step.text)}</span></div>`;
+        }).join('');
+        return `<div class="stage-card"><div class="stage-header"><strong>${escapeHTML(st.stage)}</strong><span class="stage-badge">${escapeHTML(st.level)}</span></div>${stepsHtml}</div>`;
+      }).join('');
+      document.getElementById('mentor-readiness').textContent = `Readiness: ${total ? Math.round((done / total) * 100) : 0}%`;
+    }
+
+    function toggleRoadmapStep(sIdx, stepIdx) {
+      userData.examVault.roadmap[sIdx].steps[stepIdx].done = !userData.examVault.roadmap[sIdx].steps[stepIdx].done;
+      saveUserData();
+      renderRoadmap();
+    }
+
+    // Scratch Cards
+    function renderFlashcard() {
+      const cards = userData.examVault?.flashcards || [];
+      const counter = document.getElementById('card-counter');
+      const cardEl = document.getElementById('scratch-card');
+      const sideLabel = document.getElementById('card-side-label');
+      const cardText = document.getElementById('card-text');
+      if (!cards.length) { counter.textContent = 'Card 0 of 0'; return; }
+      const card = cards[currentCardIdx];
+      counter.textContent = `Card ${currentCardIdx + 1} / ${cards.length}`;
+      cardEl.classList.toggle('flipped', isCardFlipped);
+      sideLabel.textContent = isCardFlipped ? 'ANSWER / REVISION NOTE' : 'PROMPT';
+      cardText.textContent = isCardFlipped ? card.back : card.front;
+    }
+
+    document.getElementById('scratch-card').addEventListener('click', () => { if (userData.examVault?.flashcards?.length) { isCardFlipped = !isCardFlipped; renderFlashcard(); } });
+    document.getElementById('flip-card-btn').addEventListener('click', () => { if (userData.examVault?.flashcards?.length) { isCardFlipped = !isCardFlipped; renderFlashcard(); } });
+    document.getElementById('prev-card-btn').addEventListener('click', () => {
+      const len = userData.examVault?.flashcards?.length || 0;
+      if (len) { currentCardIdx = (currentCardIdx - 1 + len) % len; isCardFlipped = false; renderFlashcard(); }
+    });
+    document.getElementById('next-card-btn').addEventListener('click', () => {
+      const len = userData.examVault?.flashcards?.length || 0;
+      if (len) { currentCardIdx = (currentCardIdx + 1) % len; isCardFlipped = false; renderFlashcard(); }
+    });
+    document.getElementById('add-custom-card-btn').addEventListener('click', () => {
+      if (!userData.examVault) return alert('Generate an Exam Plan first!');
+      const front = prompt('Front of Scratch Card:'); if (!front) return;
+      const back = prompt('Back of Scratch Card:'); if (!back) return;
+      userData.examVault.flashcards.push({ front: front.trim(), back: back.trim() });
+      currentCardIdx = userData.examVault.flashcards.length - 1; isCardFlipped = false;
+      saveUserData(); renderFlashcard();
+    });
+
+    // FR7 & FR9: Scored Quiz & Weak Topic Analyzer
+    let currentQuizAnswers = {};
+    function renderScoredQuiz() {
+      const container = document.getElementById('quiz-container');
+      const quiz = userData.examVault?.quiz || [];
+      if (!quiz.length) return;
+      currentQuizAnswers = {};
+
+      container.innerHTML = `<div style="margin-bottom:12px; font-size:0.85rem; color:var(--muted);">Select your answers below and click <strong>Submit & Record Score</strong> to analyze weak topics:</div>` +
+        quiz.map((item, qIdx) => `
+          <div id="qbox_${qIdx}" style="margin-bottom:16px;">
+            <p style="font-weight:600; font-size:0.92rem; margin-bottom:8px;">${escapeHTML(item.q)} <span class="pill">${escapeHTML(item.topic || 'General')}</span></p>
+            ${item.options.map((opt, oIdx) => `
+              <button type="button" class="quiz-option" id="qopt_${qIdx}_${oIdx}" onclick="selectQuizOption(${qIdx}, ${oIdx})">${escapeHTML(opt)}</button>
+            `).join('')}
+          </div>
+        `).join('') +
+        `<button type="button" class="btn btn-full" onclick="submitScoredQuiz()">📊 Submit Mock Test & Analyze Performance</button>
+         <div id="quiz-result-banner" style="margin-top:14px;"></div>`;
+    }
+
+    function selectQuizOption(qIdx, oIdx) {
+      const quiz = userData.examVault.quiz;
+      currentQuizAnswers[qIdx] = quiz[qIdx].options[oIdx];
+      quiz[qIdx].options.forEach((_, idx) => {
+        const btn = document.getElementById(`qopt_${qIdx}_${idx}`);
+        btn.style.borderColor = idx === oIdx ? 'var(--accent-solid)' : 'var(--border)';
+        btn.style.background = idx === oIdx ? 'var(--accent-soft)' : 'var(--bg-subtle)';
+      });
+    }
+
+    function submitScoredQuiz() {
+      const vault = userData.examVault;
+      const quiz = vault.quiz;
+      let correct = 0;
+
+      quiz.forEach((item, qIdx) => {
+        const chosen = currentQuizAnswers[qIdx];
+        const topicName = item.topic || vault.subject;
+
+        item.options.forEach((opt, oIdx) => {
+          const btn = document.getElementById(`qopt_${qIdx}_${oIdx}`);
+          btn.disabled = true;
+          if (opt === item.answer) btn.classList.add('correct');
+          else if (opt === chosen) btn.classList.add('wrong');
+        });
+
+        if (chosen === item.answer) {
+          correct++;
+          // Remove from weakTopics if mastered now
+          userData.weakTopics = userData.weakTopics.filter(w => !(w.subject === vault.subject && w.topic === topicName));
+        } else {
+          // Flag weak topic (FR9)
+          if (!userData.weakTopics.some(w => w.subject === vault.subject && w.topic === topicName)) {
+            userData.weakTopics.push({
+              subject: vault.subject,
+              topic: topicName,
+              feedback: `Missed exam concept on "${topicName}". Review Stage 1 & 2 notes and re-attempt Scratch Cards.`
+            });
+          }
+        }
+      });
+
+      const pct = Math.round((correct / quiz.length) * 100);
+      userData.quizHistory.unshift({
+        subject: vault.subject,
+        score: `${correct}/${quiz.length} (${pct}%)`,
+        pct,
+        date: new Date().toLocaleDateString()
+      });
+
+      saveUserData();
+      renderAnalytics();
+      addReminder(`Mock Test scored ${pct}% in ${vault.subject}`);
+
+      document.getElementById('quiz-result-banner').innerHTML = `
+        <div class="mentor-banner" style="margin-bottom:0;">
+          <div>
+            <strong>🎯 Test Result: ${correct} / ${quiz.length} (${pct}%)</strong>
+            <p style="font-size:0.84rem; color:var(--muted);">${pct >= 70 ? 'Great job! Check the Analytics tab to review your score history.' : 'Weak topics have been flagged in your Analytics tab & Weekly Study Plan!'}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // Mentor Chat
+    document.getElementById('mentor-chat-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('mentor-question');
+      const sendBtn = document.getElementById('chat-send-btn');
+      const query = input.value.trim();
+      if (!query) return;
+
+      const chatBox = document.getElementById('mentor-chat-box');
+      chatBox.innerHTML += `<div class="msg msg-user">${escapeHTML(query)}</div>`;
+      input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      if (!geminiApiKey) {
+        const fallback = userData.examVault
+          ? `🔑 Connect your Gemini API key in the top bar for live AI mentoring! Stored topics for ${userData.examVault.subject}: ${userData.examVault.topicList.join(', ')}.`
+          : '🔑 Click "Connect Gemini API" in the top bar to activate AI Q&A!';
+        chatBox.innerHTML += `<div class="msg msg-mentor">${escapeHTML(fallback)}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+        return;
+      }
+
+      const thinkingId = 'think_' + Date.now();
+      chatBox.innerHTML += `<div id="${thinkingId}" class="msg msg-mentor" style="color:var(--muted);">⏳ Thinking...</div>`;
+      sendBtn.disabled = true;
+
+      try {
+        const v = userData.examVault;
+        const ctx = v ? `Subject: ${v.subject}, Deadline: ${v.date}, Topics: ${v.rawTopics}, Rough Notes: ${v.rawNotes}` : 'No exam vault set yet.';
+        const reply = await callGeminiAPI(`You are a personal university exam mentor. Context: ${ctx}\nStudent Question: ${query}\nExplain clearly from scratch to pro level.`, false);
+        document.getElementById(thinkingId).outerHTML = `<div class="msg msg-mentor">${escapeHTML(reply)}</div>`;
+      } catch (err) {
+        document.getElementById(thinkingId).outerHTML = `<div class="msg msg-mentor" style="color:var(--danger);">⚠️ Error: ${escapeHTML(err.message)}</div>`;
+      } finally {
+        sendBtn.disabled = false;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+    });
+
+    // ==================== FR7 & FR9: ANALYTICS & WEAK TOPICS ====================
+    function renderAnalytics() {
+      const history = userData.quizHistory || [];
+      const doneTasks = userData.tasks.filter(t => t.completed).length;
+      const avg = history.length ? Math.round(history.reduce((s, h) => s + h.pct, 0) / history.length) : 0;
+
+      document.getElementById('stat-tests-taken').textContent = history.length;
+      document.getElementById('stat-avg-score').textContent = avg + '%';
+      document.getElementById('stat-tasks-done').textContent = doneTasks;
+      document.getElementById('stat-weak-count').textContent = userData.weakTopics.length;
+
+      const weakContainer = document.getElementById('weak-topics-container');
+      if (!userData.weakTopics.length) {
+        weakContainer.innerHTML = `<p style="color:var(--success); font-size:0.88rem;">✅ No weak topics flagged! Keep taking quizzes to test mastery.</p>`;
+      } else {
+        weakContainer.innerHTML = userData.weakTopics.map(w => `
+          <div class="material-card" style="border-left:4px solid var(--danger);">
+            <div style="display:flex; justify-content:space-between;">
+              <strong>⚠️ ${escapeHTML(w.topic)}</strong>
+              <span class="badge badge-Weak">${escapeHTML(w.subject)}</span>
+            </div>
+            <p style="font-size:0.84rem; color:var(--muted); margin-top:6px;">${escapeHTML(w.feedback)}</p>
+          </div>
+        `).join('');
+      }
+
+      const scoreBody = document.getElementById('score-history-body');
+      if (!history.length) {
+        scoreBody.innerHTML = `<tr><td colspan="4" style="color:var(--muted); text-align:center;">No tests attempted yet.</td></tr>`;
+      } else {
+        scoreBody.innerHTML = history.map(h => `
+          <tr>
+            <td><strong>${escapeHTML(h.subject)}</strong></td>
+            <td class="mono">${escapeHTML(h.score)}</td>
+            <td><span class="badge ${h.pct >= 70 ? 'badge-Strong' : 'badge-Weak'}">${h.pct >= 70 ? 'Strong' : 'Needs Review'}</span></td>
+            <td class="mono" style="font-size:0.8rem;">${escapeHTML(h.date)}</td>
+          </tr>
+        `).join('');
+      }
+    }
+
+    // ==================== FR10: STUDY GROUPS (INVITE LINK & SHARING) ====================
+    document.getElementById('create-group-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('new-group-name').value.trim();
+      const subject = document.getElementById('new-group-subject').value.trim();
+      const code = 'GRP-' + Math.floor(1000 + Math.random() * 9000);
+
+      sharedGroups.unshift({
+        code,
+        name,
+        subject,
+        members: [currentUser.name],
+        sharedItems: []
+      });
+      e.target.reset();
+      saveUserData();
+      renderGroups();
+    });
+
+    function joinGroupByCode(rawInput) {
+      let code = rawInput.trim().toUpperCase();
+      if (code.includes('INVITE=')) code = code.split('INVITE=')[1].split('&')[0];
+      const grp = sharedGroups.find(g => g.code === code);
+      if (!grp) return alert('Invalid Group Invitation Code!');
+      if (!grp.members.includes(currentUser.name)) grp.members.push(currentUser.name);
+      saveUserData();
+      renderGroups();
+    }
+
+    document.getElementById('join-group-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      joinGroupByCode(document.getElementById('join-invite-code').value);
+      e.target.reset();
+    });
+
+    function shareToGroup(code) {
+      const grp = sharedGroups.find(g => g.code === code);
+      if (!grp) return;
+      const latestMat = userData.materials[0];
+      const hasQuiz = userData.examVault?.quiz?.length;
+      if (!latestMat && !hasQuiz) return alert('Add a Study Material or generate an Exam Quiz first to share with your group!');
+
+      if (latestMat) {
+        grp.sharedItems.unshift({
+          author: currentUser.name,
+          kind: 'Notes / Resource',
+          title: latestMat.title,
+          detail: latestMat.content.substring(0, 140),
+          quizData: null
+        });
+      }
+      if (hasQuiz) {
+        grp.sharedItems.unshift({
+          author: currentUser.name,
+          kind: 'Mock Quiz',
+          title: `${userData.examVault.subject} Practice Quiz (${userData.examVault.quiz.length} Qs)`,
+          detail: `Topics: ${userData.examVault.rawTopics}`,
+          quizData: userData.examVault
+        });
+      }
+      saveUserData();
+      renderGroups();
+    }
+
+    function importGroupQuiz(code, itemIdx) {
+      const grp = sharedGroups.find(g => g.code === code);
+      const item = grp?.sharedItems[itemIdx];
+      if (!item?.quizData) return;
+      userData.examVault = JSON.parse(JSON.stringify(item.quizData));
+      saveUserData();
+      loadExamVaultUI();
+      document.querySelector('[data-view="view-mentor"]').click();
+      document.querySelector('[data-sub="sub-quiz"]').click();
+    }
+
+    function copyInviteLink(code) {
+      const baseUrl = window.location.href.split('?')[0];
+      const link = `${baseUrl}?invite=${code}`;
+      navigator.clipboard?.writeText(link);
+      alert(`Invitation Link & Code Copied!\n\nInvite Code: ${code}\nShareable Link: ${link}`);
+    }
+
+    function renderGroups() {
+      const container = document.getElementById('groups-container');
+      const myGroups = sharedGroups.filter(g => g.members.includes(currentUser.name));
+      if (!myGroups.length) {
+        container.innerHTML = `<p style="color:var(--muted); font-size:0.88rem;">You haven't joined any study groups yet. Create one or paste an invite code on the left!</p>`;
+        return;
+      }
+
+      container.innerHTML = myGroups.map(g => `
+        <div class="group-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div>
+              <strong style="font-size:1rem;">👥 ${escapeHTML(g.name)}</strong>
+              <span class="pill" style="margin-left:6px;">${escapeHTML(g.subject)}</span>
+            </div>
+            <div>
+              <button type="button" class="action-btn btn-check" onclick="copyInviteLink('${g.code}')">🔗 Invite (${g.code})</button>
+              <button type="button" class="btn" style="padding:5px 10px; font-size:0.76rem;" onclick="shareToGroup('${g.code}')">📤 Share My Notes & Quiz</button>
+            </div>
+          </div>
+          <div style="font-size:0.8rem; color:var(--muted); margin-top:6px;">Members: ${g.members.map(escapeHTML).join(', ')}</div>
+          <div style="margin-top:12px;">
+            ${g.sharedItems.length ? g.sharedItems.map((it, idx) => `
+              <div class="material-card" style="margin-bottom:8px;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span><span class="stage-badge">${escapeHTML(it.kind)}</span> <strong>${escapeHTML(it.title)}</strong> <small style="color:var(--muted);">by ${escapeHTML(it.author)}</small></span>
+                  ${it.quizData ? `<button type="button" class="action-btn btn-check" onclick="importGroupQuiz('${g.code}', ${idx})">Attempt Quiz →</button>` : ''}
+                </div>
+                <p style="font-size:0.82rem; color:var(--muted); margin-top:4px;">${escapeHTML(it.detail)}</p>
+              </div>
+            `).join('') : '<p style="font-size:0.82rem; color:var(--muted);">No materials or quizzes shared in this group yet.</p>'}
+          </div>
+        </div>
+      `).join('');
     }
 
     // ==================== POMODORO TIMER ====================
-    let timeLeft = 25 * 60;
-    let timerInterval = null;
+    let timeLeft = 25 * 60, timerInterval = null;
     const timerDisplay = document.getElementById('timer');
     const startTimerBtn = document.getElementById('start-timer');
 
     function updateTimerText() {
-      const mins = String(Math.floor(timeLeft / 60)).padStart(2, '0');
-      const secs = String(timeLeft % 60).padStart(2, '0');
-      timerDisplay.textContent = `${mins}:${secs}`;
+      timerDisplay.textContent = `${String(Math.floor(timeLeft / 60)).padStart(2, '0')}:${String(timeLeft % 60).padStart(2, '0')}`;
     }
 
     startTimerBtn.addEventListener('click', () => {
       if (timerInterval) {
-        clearInterval(timerInterval);
-        timerInterval = null;
-        startTimerBtn.textContent = 'Start';
+        clearInterval(timerInterval); timerInterval = null; startTimerBtn.textContent = 'Start';
       } else {
         startTimerBtn.textContent = 'Pause';
         timerInterval = setInterval(() => {
-          if (timeLeft > 0) {
-            timeLeft--;
-            updateTimerText();
-          } else {
-            clearInterval(timerInterval);
-            alert('Focus session complete! Take a 5-minute break.');
-          }
+          if (timeLeft > 0) { timeLeft--; updateTimerText(); }
+          else { clearInterval(timerInterval); addReminder('25-minute Focus Session completed!'); }
         }, 1000);
       }
     });
 
     document.getElementById('reset-timer').addEventListener('click', () => {
-      clearInterval(timerInterval);
-      timerInterval = null;
-      timeLeft = 25 * 60;
-      startTimerBtn.textContent = 'Start';
-      updateTimerText();
+      clearInterval(timerInterval); timerInterval = null; timeLeft = 25 * 60; startTimerBtn.textContent = 'Start'; updateTimerText();
     });
 
-    // Auto-login if session exists
-    if (currentUser) {
-      loginStudent(currentUser);
-    }
+    // Auto-login if session active
+    if (currentUser) loginStudent(currentUser);
   </script>
 </body>
 </html>
